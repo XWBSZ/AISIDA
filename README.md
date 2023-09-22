@@ -20,8 +20,10 @@ https://replit.com
 
 4. 将以下代码粘贴到main.py文件中：
 
+
 python
 Copy code
+
 
 
 class Car:
