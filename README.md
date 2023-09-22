@@ -23,6 +23,7 @@ https://replit.com
 python
 Copy code
 
+
 class Car:
     def __init__(self, name, base_speed, panel_speed):
         self.name = name
