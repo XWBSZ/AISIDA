@@ -1,31 +1,35 @@
-混沌回忆艾丝妲相关行动顺序计算器。
+# 混沌回忆艾丝妲行动顺序计算器
 
-在开始使用之前，请注意以下几点：
+欢迎使用混沌回忆艾丝妲相关行动顺序计算器，通过这个工具，您可以优化您的战斗策略，提高战斗效率和胜率。本文将为您提供详细的使用说明，让您轻松上手。
 
-0. 此代码模拟的是混沌回忆第二波的角色行动。
+## 使用前须知
 
-1. 艾丝妲的大招需要在每一次“饮月”，也就是你的慢速主C，奇数次行动时开启。
+在开始使用计算器之前，请注意以下几点：
 
-2. 艾丝妲的大招等级为10级，提供额外50速度，并穿戴4信使套。
+- 此计算器模拟的是混沌回忆第二波的角色行动。
+- 艾丝妲的大招需要在每一次“饮月”，也就是您的慢速主C，奇数次行动时开启。
+- 艾丝妲的大招等级为10级，提供额外50速度，并穿戴4信使套。
+- 除了艾丝妲之外，不考虑其他任何加速减速推条的因素。
 
-3. 除了艾丝妲之外，不考虑其他任何加速减速推条的因素。
+## 如何运行计算器
 
-如何在手机上运行这个代码：
-1. 打开一个在线代码编译网站：
-https://replit.com
+### 1. 打开在线代码编译网站
 
-2. 注册并登录您的账号。
+首先，打开一个在线代码编译网站，我们建议使用 [Replit](https://replit.com/)。
 
-3. 点击蓝色按钮，选择“Create a REPL”。在弹出的界面中，左侧选择Python，右上角为您的项目命名，例如“艾丝妲二动模拟”，然后点击右下角的蓝色按钮创建。
+### 2. 注册并登录
 
-4. 将以下代码粘贴到main.py文件中：
+如果您还没有账号，注册并登录您的账号。
 
+### 3. 创建项目
 
-python
-Copy code
+点击蓝色按钮，选择“Create a REPL”。在弹出的界面中，左侧选择Python，右上角为您的项目命名，例如“艾丝妲二动模拟”，然后点击右下角的蓝色按钮创建。
 
+### 4. 粘贴代码
 
+将以下代码粘贴到 `main.py` 文件中：
 
+```python
 class Car:
     def __init__(self, name, base_speed, panel_speed):
         self.name = name
@@ -42,18 +46,22 @@ class Car:
         if self.current_position >= track_length:
             self.current_position -= track_length
             self.return_count += 1
-
             if self.name == "饮月" and self.return_count % 2 == 1:
                 for car in cars.values():
                     car.current_speed = car.base_speed * 0.12 + 50 + car.panel_speed
             else:
-                self.current_speed = self.panel_speed if self.current_speed == self.panel_speed else (
-                        self.panel_speed if self.current_speed == self.panel_speed + 50 else self.panel_speed + 50)
-
+                self.current_speed = (
+                    self.panel_speed
+                    if self.current_speed == self.panel_speed
+                    else (
+                        self.panel_speed
+                        if self.current_speed == self.panel_speed + 50
+                        else self.panel_speed + 50
+                    )
+                )
             return True
         else:
             return False
-
 
 TRACK_LENGTH = 10000
 DELTA_T = 0.001
@@ -65,21 +73,17 @@ cars = {
     "饮月": Car("饮月", 102, 104.2)
 }
 
-
 def adjust_speed(car, speed_delta):
     car.current_speed += speed_delta
-
 
 adjust_speed(cars["御空"], 0)
 adjust_speed(cars["爱丝妲"], 50)
 adjust_speed(cars["罗刹"], 50)
 adjust_speed(cars["饮月"], 50)
 
-
 def race():
     result = []
     current_time = 0
-
     while current_time <= 250:
         for name, car in cars.items():
             car.update_position(DELTA_T)
@@ -87,71 +91,76 @@ def race():
                 lap_time = current_time
                 lap_count = car.return_count
                 result.append((lap_time, name, lap_count))
-
         current_time += DELTA_T
-
     result.sort()
     return "\n".join([f"({item[1]}, {item[0]:.2f}, {item[2]})" for item in result])
 
-
 print(race())
+```
 
+### 5. 配置角色属性
 
-配置角色属性：
-python
-Copy code
-# 示例角色配置，请根据您的队伍角色属性进行修改
+在代码中，您可以根据您的队伍角色属性进行修改。例如，如果您的御空的基础速度是108，面板速度是172，您可以将以下行中的数字改为相应的值：
+
+```python
 cars = {
-    "御空": Car("御空", 107, 170),
-    "爱丝妲": Car("爱丝妲", 106, 163),
-    "罗刹": Car("罗刹", 101, 162),
-    "饮月": Car("饮月", 102, 104.2)
+    "御空": Car("御空", 108, 172),
+    ...
 }
-调整速度：
-如果您的队伍在第二波模拟时有艾丝妲的加速效果，请将以下行中的速度值从0改为50：
+```
 
-python
-Copy code
-adjust_speed(cars["御空"], 0)
-运行模拟：
-python
-Copy code
-print(race())
-注意事项：
-混沌回忆的第一轮时间为150，第二轮及之后的所有轮次都是100。如果您想模拟三轮以内的角色行动顺序，请将以下行中的时间从250改为350：
-python
-Copy code
-while current_time <= 250:
-现在您已经准备好模拟混沌回忆第二波的角色行动了！祝您好运！
+### 6. 调整速度
 
+如果您的队伍在第二波开始时有上一波艾丝妲的加速效果，请将以下行中的速度值从0改为50：
 
+```python
+adjust_speed(cars["御空"], 50)
+```
 
+### 7. 运行模拟
 
-User
-给我的标题取个名字吧
+在代码编辑器的右上角，点击绿色按钮，选择“Run”。代码将开始运行，并在下方显示输出结果。
 
-ChatGPT
-当然，请为您的GitHub攻略取一个有趣而专业的标题：
+## 输出结果解释
 
-"混沌回忆第二波：角色行动模拟与优化"
+运行完毕后，您会看到类似以下输出结果：
 
+```
+(爱丝妲, 46.95, 1)
+(罗刹, 47.17, 1)
+(御空, 58.82, 1)
+(饮月, 64.85, 1)
+(爱丝妲, 96.23, 2)
+(罗刹, 96.69, 2)
+(御空, 103.40, 2)
+(饮月, 124.93, 2)
+(爱丝妲, 143.17, 3)
+(罗刹, 143.86, 3)
+(御空, 148.85, 3)
+(饮月, 189.78, 3)
+(爱丝妲, 200.43, 4)
+(罗刹, 201.21, 4)
+(御空, 202.85, 4)
+(爱丝妲, 247.38, 5)
+(御空, 248.30, 5)
+(罗刹, 248.38, 5)
+(饮月, 249.87, 4)
+```
 
+输出结果的含义是：
 
+- 每一行代表一个角色完成一圈的时间、名称和行动次数。
+- 每一行的格式为：(角色名称, 完成时间, 行动次数数)。
+- 输出结果按照完成时间从小到大排序。
 
-User
-我觉得前半部分还不够有吸引力
+例如，第一行的结果是：
 
-ChatGPT
-明白了，为了增加吸引力，您可以考虑以下标题：
+```
+(爱丝妲, 46.95, 1)
+```
 
-"解锁胜利之路：混沌回忆第二波角色行动高级模拟"
+这意味着爱丝妲在46.95秒时完成了第一次的行动。
 
+您可以根据这些结果来调整您的战斗策略，以便更好地安排角色的行动顺序，从而提高您的战斗效率和胜率。
 
-
-
-
-Send a message
-
-
-Free Research Preview. ChatGPT may produce inaccurate information about people, places, or facts. ChatGPT August 3 Version
-ChatGPT
+祝您在混沌回忆中取得胜利！如果您有任何问题或需要进一步的帮助，请随时提问。
